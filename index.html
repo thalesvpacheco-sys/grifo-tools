@@ -7,8 +7,7 @@
   <meta name="description" content="Ferramentas internas da Grifo Agency." />
   <meta name="theme-color" content="#ffffff" />
 
-  <!-- Anti-flash: aplica o tema ANTES do primeiro render.
-       Roda sincrono aqui no <head> para evitar piscar de cor. -->
+  <!-- Anti-flash: aplica o tema ANTES do primeiro render -->
   <script>
     (function () {
       var stored = localStorage.getItem('grifo_theme');
@@ -53,7 +52,6 @@
               800: '#491510',
               900: '#2E0C09'
             },
-            /* Tokens de dark mode — usados como dark:bg-gt-bg, etc. */
             gt: {
               bg:      '#0f0f0f',
               surface: '#1a1a1a',
@@ -74,60 +72,10 @@
 <body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20 dark:bg-gt-bg dark:text-gt-hi">
 
   <!-- ============================================================
-       Header
+       Header (injetado por js/header.js)
        ============================================================ -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200 dark:bg-gt-bg/90 dark:supports-[backdrop-filter]:bg-gt-bg/70 dark:border-gt-border">
-    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center">
-
-      <!-- Logo: dois <img>, visibilidade controlada por CSS (html.dark) -->
-      <a href="https://grifo.agency" target="_blank" rel="noopener" aria-label="Visitar site da Grifo">
-        <img
-          id="logoLight"
-          src="./assets/logo.png"
-          alt="Grifo"
-          class="h-7 w-auto"
-          onerror="this.style.display='none'; document.getElementById('logoFallback').classList.remove('hidden')"
-        />
-        <img
-          id="logoDark"
-          src="./assets/logo-white.png"
-          alt="Grifo"
-          class="h-7 w-auto"
-          onerror="this.style.display='none'; document.getElementById('logoFallback').classList.remove('hidden')"
-        />
-        <span id="logoFallback" class="hidden font-semibold text-brand-700 dark:text-brand-300 text-lg">Grifo</span>
-      </a>
-
-      <div class="flex-1"></div>
-
-      <!-- Controles de tema: sol e lua sempre visiveis lado a lado.
-           O icone do tema ativo tem opacidade total; o inativo, 30%.
-           A opacidade e gerenciada pelo script no final do body. -->
-      <div class="flex items-center gap-0.5" role="group" aria-label="Selecionar tema">
-        <button
-          id="btnLight"
-          type="button"
-          aria-label="Ativar tema claro"
-          class="w-8 h-8 flex items-center justify-center rounded-lg text-neutral-500 dark:text-gt-md transition-opacity"
-        >
-          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
-          </svg>
-        </button>
-        <button
-          id="btnDark"
-          type="button"
-          aria-label="Ativar tema escuro"
-          class="w-8 h-8 flex items-center justify-center rounded-lg text-neutral-500 dark:text-gt-md transition-opacity"
-        >
-          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
-          </svg>
-        </button>
-      </div>
-
-    </div>
-  </header>
+  <header id="site-header" data-tool="" data-root="./"></header>
+  <script src="./js/header.js"></script>
 
   <!-- ============================================================
        Hero
@@ -245,44 +193,6 @@
       <span>Nenhum dado e enviado a servidores.</span>
     </div>
   </footer>
-
-  <!-- ============================================================
-       Script de tema
-       ============================================================ -->
-  <script>
-    (function () {
-      var btnLight = document.getElementById('btnLight');
-      var btnDark  = document.getElementById('btnDark');
-
-      /**
-       * Aplica o tema e atualiza a opacidade dos icones.
-       * A logo e controlada por CSS (html.dark #logoLight/logoDark),
-       * entao nao precisa de manipulacao aqui.
-       */
-      function applyTheme(isDark) {
-        document.documentElement.classList.toggle('dark', isDark);
-        if (btnLight) btnLight.style.opacity = isDark ? '0.3' : '1';
-        if (btnDark)  btnDark.style.opacity  = isDark ? '1'   : '0.3';
-      }
-
-      // Estado inicial: a classe dark ja pode estar no <html> pelo anti-flash
-      applyTheme(document.documentElement.classList.contains('dark'));
-
-      if (btnLight) {
-        btnLight.addEventListener('click', function () {
-          localStorage.setItem('grifo_theme', 'light');
-          applyTheme(false);
-        });
-      }
-
-      if (btnDark) {
-        btnDark.addEventListener('click', function () {
-          localStorage.setItem('grifo_theme', 'dark');
-          applyTheme(true);
-        });
-      }
-    })();
-  </script>
 
 </body>
 </html>
