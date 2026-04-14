@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grifo Tools</title>
+  <meta name="description" content="Ferramentas internas da Grifo Agency." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png" />
+  <link rel="shortcut icon" href="./assets/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              50:  '#FAF0EF',
+              100: '#F3D5D2',
+              200: '#E8AAA5',
+              300: '#D47A72',
+              400: '#BA4F46',
+              500: '#9E342B',
+              600: '#802B22',
+              700: '#641F18',
+              800: '#491510',
+              900: '#2E0C09'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Estilos globais compartilhados -->
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20">
+
+  <!-- ============================================================
+       Header
+       ============================================================ -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center">
+      <a href="https://grifo.agency" target="_blank" rel="noopener" aria-label="Visitar site da Grifo">
+        <img
+          id="logoImg"
+          src="./assets/logo.png"
+          alt="Grifo"
+          class="h-7 w-auto"
+          onerror="this.style.display='none'; document.getElementById('logoFallback').classList.remove('hidden')"
+        />
+        <span id="logoFallback" class="hidden font-semibold text-brand-700 text-lg">Grifo</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       Hero
+       ============================================================ -->
+  <section class="max-w-5xl mx-auto px-4 pt-12 pb-8 text-center">
+    <h1 class="text-3xl sm:text-4xl font-bold text-neutral-900 leading-tight mb-3">
+      Ferramentas internas
+    </h1>
+    <p class="text-neutral-500 text-base">
+      Utilitarios rapidos para o dia a dia da agencia.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       Cards
+       ============================================================ -->
+  <main class="max-w-5xl mx-auto px-4 pb-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <!-- Card: Image Converter -->
+      <a
+        href="./tools/image-converter/index.html"
+        class="group block rounded-2xl bg-brand-600 p-6 hover:bg-brand-700 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+        aria-label="Abrir Image Converter"
+      >
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color:#F09702">
+            <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+            </svg>
+          </div>
+          <svg class="w-4 h-4 text-brand-300 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+          </svg>
+        </div>
+        <h2 class="font-semibold text-white mb-1">Image Converter</h2>
+        <p class="text-sm text-brand-200 leading-relaxed mb-4">
+          Converte e comprime imagens em lote. Suporta WebP, JPG, PNG e HEIC com redimensionamento e presets.
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">WebP</span>
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">JPG</span>
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">PNG</span>
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">HEIC</span>
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">Lote</span>
+        </div>
+      </a>
+
+      <!-- Card: UTM Builder -->
+      <a
+        href="./tools/utm-builder/index.html"
+        class="group block rounded-2xl bg-brand-600 p-6 hover:bg-brand-700 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+        aria-label="Abrir UTM Builder"
+      >
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color:#F09702">
+            <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+            </svg>
+          </div>
+          <svg class="w-4 h-4 text-brand-300 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+          </svg>
+        </div>
+        <h2 class="font-semibold text-white mb-1">UTM Builder</h2>
+        <p class="text-sm text-brand-200 leading-relaxed mb-4">
+          Gera URLs com parametros UTM para rastreamento de campanhas. Copia com um clique.
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">utm_source</span>
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">utm_medium</span>
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">Campanhas</span>
+        </div>
+      </a>
+
+      <!-- Card: QR Code -->
+      <a
+        href="./tools/qr-code/index.html"
+        class="group block rounded-2xl bg-brand-600 p-6 hover:bg-brand-700 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+        aria-label="Abrir Gerador de QR Code"
+      >
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color:#F09702">
+            <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5ZM6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
+            </svg>
+          </div>
+          <svg class="w-4 h-4 text-brand-300 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+          </svg>
+        </div>
+        <h2 class="font-semibold text-white mb-1">QR Code</h2>
+        <p class="text-sm text-brand-200 leading-relaxed mb-4">
+          Gera QR Codes personalizados. Escolha cores, tamanho e baixe em PNG ou SVG.
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">PNG</span>
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">SVG</span>
+          <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-700 text-brand-100 border border-brand-500">Personalizado</span>
+        </div>
+      </a>
+
+    </div>
+  </main>
+
+  <!-- ============================================================
+       Footer
+       ============================================================ -->
+  <footer class="border-t border-neutral-100">
+    <div class="max-w-5xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-neutral-400">
+      <span>Feito por <a href="https://grifo.agency" target="_blank" rel="noopener" class="text-neutral-500 hover:text-brand-600 transition-colors">Grifo Agency</a></span>
+      <span>Nenhum dado e enviado a servidores.</span>
+    </div>
+  </footer>
+
+</body>
+</html>

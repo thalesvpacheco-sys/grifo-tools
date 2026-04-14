@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grifo Tools</title>
+  <meta name="description" content="Conversor & Compressor de Imagens — WebP/JPG/PNG + HEIC — 100% client-side." />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+  <link rel="shortcut icon" href="./assets/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+  <link rel="icon" sizes="192x192" href="./assets/android-chrome-192x192.png">
+  <link rel="icon" sizes="512x512" href="./assets/android-chrome-512x512.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50:'#EFF6FF', 100:'#DBEAFE', 200:'#BFDBFE', 300:'#93C5FD', 400:'#60A5FA',
+              500:'#3B82F6', 600:'#2563EB', 700:'#1D4ED8', 800:'#1E40AF', 900:'#1E3A8A'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- JSZip -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+  <!-- HEIC fallback #1: heic2any -->
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+
+  <!-- HEIC fallback #2: libheif-js com fallback de CDN -->
+  <script>
+    (function loadLibheif() {
+      var urls = [
+        "https://cdn.jsdelivr.net/npm/libheif-js@1.19.8/libheif-wasm/libheif-bundle.js",
+        "https://unpkg.com/libheif-js@1.19.8/libheif-wasm/libheif-bundle.js"
+      ];
+      function inject(i) {
+        if (i >= urls.length) return;
+        var s     = document.createElement("script");
+        s.src     = urls[i];
+        s.async   = true;
+        s.onerror = function() { inject(i + 1); };
+        document.head.appendChild(s);
+      }
+      inject(0);
+    })();
+  </script>
+
+  <!-- Estilos globais -->
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20">
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200">
+    <div class="max-w-7xl mx-auto px-4 h-14 flex items-center gap-3">
+      <a href="https://grifo.agency" target="_blank" rel="noopener" class="shrink-0" aria-label="Visitar site da Grifo">
+        <img id="logoImg" src="./assets/logo.png" alt="Grifo" class="h-7 w-auto"
+             onerror="this.style.display='none';document.getElementById('logoFallback').classList.remove('hidden')" />
+        <span id="logoFallback" class="hidden font-semibold text-brand-700">Grifo</span>
+      </a>
+      <div class="flex-1"></div>
+      <h1 class="text-sm md:text-base font-medium text-neutral-700">Conversor (WebP/JPG/PNG) + HEIC</h1>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 grid md:grid-cols-12 gap-6">
+    <section class="md:col-span-4 space-y-6">
+      <div id="dropzone" class="border-2 border-dashed border-neutral-300 rounded-2xl p-6 text-center bg-neutral-50 hover:border-brand-500 transition cursor-pointer">
+        <div class="space-y-2">
+          <p class="text-neutral-700">Arraste & solte imagens aqui</p>
+          <p class="text-neutral-500 text-sm">ou</p>
+          <p class="text-neutral-500 text-xs">Dica: você pode <strong>colar</strong> imagens com <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>V</kbd></p>
+          <label for="fileInput" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-medium cursor-pointer">Selecionar arquivos</label>
+          <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,image/heic,image/heif,.heic,.heif" multiple class="hidden" />
+          <p id="queueInfo" class="text-xs text-neutral-500">Nenhum arquivo adicionado</p>
+          <p id="decoderHint" class="text-[11px] text-neutral-400">
+            HEIC no Chrome depende de decoder (WASM). Se falhar, desative AdBlock/rede bloqueando CDN e NÃO use file:// (use http/https).
+          </p>
+        </div>
+      </div>
+
+      <details class="group md:open" open>
+        <summary class="list-none select-none cursor-pointer flex items-center justify-between bg-white border border-neutral-200 rounded-2xl px-4 py-3">
+          <span class="font-medium text-neutral-800">Configurações</span>
+          <span class="text-neutral-500 group-open:rotate-180 transition">▾</span>
+        </summary>
+        <div class="p-4 border border-neutral-200 border-t-0 rounded-b-2xl bg-neutral-50 space-y-4">
+          <div>
+            <label for="formatSel" class="block text-sm text-neutral-700 mb-1">Formato de saída</label>
+            <select id="formatSel" class="w-full px-3 py-2 rounded-lg bg-white border border-neutral-300 text-neutral-900 text-sm">
+              <option value="webp">WebP (recomendado)</option>
+              <option value="avif">AVIF (alta compressão)</option>
+              <option value="jpg">JPG</option>
+              <option value="png">PNG (lossless)</option>
+            </select>
+            <p class="text-xs text-neutral-500 mt-1">HEIC será decodificado no navegador (com fallback). AVIF requer Chrome 94+, Firefox 93+ ou Safari 16+.</p>
+          </div>
+
+          <div>
+            <label for="quality" class="block text-sm text-neutral-700 mb-1">Qualidade (1–100)</label>
+            <div class="flex items-center gap-3">
+              <input id="quality" type="range" min="1" max="100" value="85" class="w-full" />
+              <input id="qualityInput" type="number" min="1" max="100" value="85" class="w-20 px-3 py-2 rounded-lg bg-white border border-neutral-300 text-neutral-900 text-sm" />
+            </div>
+            <p id="qualityHint" class="text-xs text-neutral-500 mt-1">WebP/JPG usam qualidade; PNG é lossless. Em JPG, fundo só é aplicado se houver transparência.</p>
+          </div>
+
+          <div id="jpgBgWrap" class="hidden">
+            <label for="jpgBg" class="block text-sm text-neutral-700 mb-1">Fundo para transparência (JPG)</label>
+            <input id="jpgBg" type="color" value="#FFFFFF" class="h-9 w-16 rounded-md bg-white border border-neutral-300 p-1" />
+          </div>
+
+          <div class="space-y-2">
+            <label class="inline-flex items-center gap-2">
+              <input id="resizeToggle" type="checkbox" class="accent-brand-600" checked />
+              <span class="text-sm text-neutral-800">Redimensionar (não ampliar)</span>
+            </label>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label for="maxW" class="block text-xs text-neutral-500 mb-1">Máx. Largura (px)</label>
+                <input id="maxW" type="number" min="1" value="1920" class="w-full px-3 py-2 rounded-lg bg-white border border-neutral-300 text-neutral-900 text-sm" />
+              </div>
+              <div>
+                <label for="maxH" class="block text-xs text-neutral-500 mb-1">Máx. Altura (px)</label>
+                <input id="maxH" type="number" min="1" value="1080" class="w-full px-3 py-2 rounded-lg bg-white border border-neutral-300 text-neutral-900 text-sm" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="inline-flex items-center gap-2 opacity-60 cursor-default" title="A conversão via canvas remove metadata automaticamente — não é possível preservar EXIF/ICC neste fluxo.">
+              <input id="stripMeta" type="checkbox" class="accent-brand-600" checked disabled />
+              <span class="text-sm text-neutral-800">Metadata removida automaticamente (EXIF/ICC)</span>
+            </label>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button id="savePreset" class="px-3 py-2 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-300 text-sm">Salvar preset</button>
+            <select id="applyPreset" class="px-3 py-2 rounded-xl bg-white border border-neutral-300 text-sm text-neutral-900 min-w-[10rem]">
+              <option value="">Aplicar preset…</option>
+            </select>
+            <button id="deletePreset" class="px-3 py-2 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-300 text-sm">Excluir preset</button>
+          </div>
+
+          <div class="border-t border-neutral-200 pt-3">
+            <label for="concurrency" class="block text-sm text-neutral-700 mb-1">Avançado — Concorrência</label>
+            <input id="concurrency" type="number" min="1" max="8" value="3" class="w-24 px-3 py-2 rounded-lg bg-white border border-neutral-300 text-neutral-900 text-sm" />
+            <p class="text-xs text-neutral-500 mt-1">Padrão: 3. Se HEIC der pau por memória, coloque 1.</p>
+          </div>
+        </div>
+      </details>
+
+      <div class="text-xs text-neutral-500">
+        Limites: até 500 arquivos/lote; 50–100MB/arquivo; até 12.000px no maior lado; ZIP recomendado &lt; 500MB.
+      </div>
+    </section>
+
+    <section class="md:col-span-8 space-y-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <button id="btnConvert" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-medium">Converter</button>
+        <button id="btnPause"   class="px-4 py-2 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-300 text-sm">Pausar</button>
+        <button id="btnResume"  class="px-4 py-2 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-300 text-sm">Retomar</button>
+        <button id="btnClear"   class="px-4 py-2 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-300 text-sm">Limpar fila</button>
+        <button id="btnZip"     class="px-4 py-2 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-300 text-sm">Baixar ZIP</button>
+      </div>
+
+      <div class="bg-neutral-50 border border-neutral-200 rounded-2xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="font-medium text-neutral-800">Arquivos</h2>
+          <span id="summary" class="text-sm text-neutral-500">0 itens</span>
+        </div>
+        <ul id="fileList" class="space-y-3"></ul>
+        <div class="mt-4">
+          <label class="block text-xs text-neutral-500 mb-1">Progresso total</label>
+          <div class="w-full h-2 bg-neutral-200 rounded-full overflow-hidden">
+            <div id="totalBar" class="h-2 bg-brand-600 transition-[width] duration-200" style="width:0%"></div>
+          </div>
+          <div id="totalText" class="mt-1 text-xs text-neutral-500">0/0 concluídos (0%)</div>
+        </div>
+      </div>
+
+      <div aria-live="polite" id="statusLive" class="text-sm text-neutral-700"></div>
+    </section>
+  </main>
+
+  <div class="md:hidden fixed bottom-0 inset-x-0 border-t border-neutral-200 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 p-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      <button id="mConvert" class="px-3 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-medium">Converter</button>
+      <button id="mPause"   class="px-3 py-2 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-300 text-sm">Pausar</button>
+      <button id="mResume"  class="px-3 py-2 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-300 text-sm">Retomar</button>
+      <button id="mZip"     class="px-3 py-2 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-300 text-sm">ZIP</button>
+    </div>
+  </div>
+
+  <footer class="max-w-7xl mx-auto px-4 py-10 text-xs text-neutral-500">
+    · Feito por Grifo Agency | Thales Pacheco
+  </footer>
+
+  <!-- Scripts na ordem correta de dependência -->
+  <script src="./js/config.js"></script>
+  <script src="./js/state.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/presets.js"></script>
+  <script src="./js/heic.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/processor.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>

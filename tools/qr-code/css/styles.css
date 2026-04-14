@@ -1,0 +1,13 @@
+/* ============================================================
+   styles.css — QR Code (Grifo Tools)
+   Responsabilidade: Estilos minimos nao cobertos pelo Tailwind
+   Dependencias: nenhuma
+   ============================================================ */
+
+html { scroll-behavior: smooth; }
+:focus { outline: 2px solid #802B22; outline-offset: 2px; }
+
+/* Preview sempre contido no card, proporcao 1:1 */
+#preview { width: 100%; max-width: 520px; aspect-ratio: 1 / 1; }
+#preview canvas,
+#preview svg { width: 100% !important; height: auto !important; max-width: 100% !important; display: block; }

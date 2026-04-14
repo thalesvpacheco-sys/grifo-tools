@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UTM Builder — Grifo Tools</title>
+  <meta name="description" content="Gere URLs com parametros UTM para rastreamento de campanhas. 100% client-side." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png" />
+  <link rel="shortcut icon" href="../../assets/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png" />
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Poppins', 'sans-serif'] },
+          colors: {
+            brand: {
+              50:  '#FAF0EF',
+              100: '#F3D5D2',
+              200: '#E8AAA5',
+              300: '#D47A72',
+              400: '#BA4F46',
+              500: '#9E342B',
+              600: '#802B22',
+              700: '#641F18',
+              800: '#491510',
+              900: '#2E0C09'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20">
+
+  <!-- ============================================================
+       Header
+       ============================================================ -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center gap-3">
+      <a href="../../index.html" aria-label="Voltar ao hub" class="text-neutral-400 hover:text-brand-600 transition-colors">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+      </a>
+      <a href="https://grifo.agency" target="_blank" rel="noopener" aria-label="Visitar site da Grifo">
+        <img
+          id="logoImg"
+          src="../../assets/logo.png"
+          alt="Grifo"
+          class="h-7 w-auto"
+          onerror="this.style.display='none'; document.getElementById('logoFallback').classList.remove('hidden')"
+        />
+        <span id="logoFallback" class="hidden font-semibold text-brand-700 text-lg">Grifo</span>
+      </a>
+      <div class="flex-1"></div>
+      <span class="text-sm font-medium text-neutral-600">UTM Builder</span>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       Main
+       ============================================================ -->
+  <main class="max-w-5xl mx-auto px-4 py-8 grid md:grid-cols-12 gap-6">
+
+    <!-- Coluna esquerda: formulario -->
+    <section class="md:col-span-5 space-y-6">
+      <div>
+        <h1 class="text-2xl font-bold text-neutral-900 mb-1">UTM Builder</h1>
+        <p class="text-sm text-neutral-500">Monte URLs de campanha com parametros UTM.</p>
+      </div>
+
+      <form id="utmForm" autocomplete="off" novalidate class="space-y-4">
+
+        <!-- Campos gerados via config -->
+        <!-- baseUrl -->
+        <div>
+          <label for="baseUrl" class="block text-sm font-medium text-neutral-700 mb-1">
+            Website URL <span class="text-brand-600">*</span>
+          </label>
+          <input
+            id="baseUrl" type="url" inputmode="url"
+            placeholder="https://exemplo.com/pagina"
+            class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+          />
+        </div>
+
+        <!-- utm_id -->
+        <div>
+          <label for="utm_id" class="block text-sm font-medium text-neutral-700 mb-1">utm_id</label>
+          <input
+            id="utm_id" type="text" placeholder="ex: sale-24"
+            class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+          />
+        </div>
+
+        <!-- utm_source -->
+        <div>
+          <label for="utm_source" class="block text-sm font-medium text-neutral-700 mb-1">
+            utm_source <span class="text-brand-600">*</span>
+          </label>
+          <input
+            id="utm_source" type="text" placeholder="ex: instagram"
+            class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+          />
+        </div>
+
+        <!-- utm_medium -->
+        <div>
+          <label for="utm_medium" class="block text-sm font-medium text-neutral-700 mb-1">
+            utm_medium <span class="text-brand-600">*</span>
+          </label>
+          <input
+            id="utm_medium" type="text" placeholder="ex: cpc"
+            class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+          />
+        </div>
+
+        <!-- utm_campaign -->
+        <div>
+          <label for="utm_campaign" class="block text-sm font-medium text-neutral-700 mb-1">
+            utm_campaign <span class="text-brand-600">*</span>
+          </label>
+          <input
+            id="utm_campaign" type="text" placeholder="ex: lancamento-verao"
+            class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+          />
+        </div>
+
+        <!-- utm_term -->
+        <div>
+          <label for="utm_term" class="block text-sm font-medium text-neutral-700 mb-1">utm_term</label>
+          <input
+            id="utm_term" type="text" placeholder="ex: tenis-masculino"
+            class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+          />
+        </div>
+
+        <!-- utm_content -->
+        <div>
+          <label for="utm_content" class="block text-sm font-medium text-neutral-700 mb-1">utm_content</label>
+          <input
+            id="utm_content" type="text" placeholder="ex: cta-topo"
+            class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+          />
+        </div>
+
+        <!-- Opcoes -->
+        <div class="border border-neutral-200 rounded-xl p-4 space-y-3 bg-neutral-50">
+          <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Opcoes</p>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input id="optLower" type="checkbox" checked class="accent-brand-600 w-4 h-4" />
+            <span class="text-sm text-neutral-700">Forcar minusculas</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input id="optKeepExisting" type="checkbox" checked class="accent-brand-600 w-4 h-4" />
+            <span class="text-sm text-neutral-700">Manter parametros existentes na URL base</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input id="optEncode" type="checkbox" checked class="accent-brand-600 w-4 h-4" />
+            <span class="text-sm text-neutral-700">Codificar valores (URL encode)</span>
+          </label>
+        </div>
+
+        <!-- Botoes -->
+        <div class="flex gap-3">
+          <button
+            id="btnBuild" type="submit"
+            class="flex-1 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors"
+          >Gerar URL</button>
+          <button
+            id="btnReset" type="button"
+            class="px-4 py-2.5 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 text-sm font-medium transition-colors"
+          >Limpar</button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Coluna direita: resultado + tabela de exemplos -->
+    <section class="md:col-span-7 space-y-6">
+
+      <!-- Card resultado -->
+      <div class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold text-neutral-900">Resultado</h2>
+          <span class="text-xs text-neutral-400">Preview em tempo real</span>
+        </div>
+
+        <output id="preview" class="block w-full rounded-xl border border-neutral-200 bg-neutral-50 font-mono text-sm p-4 break-words overflow-y-auto min-h-16 max-h-48 text-neutral-400" aria-live="polite">
+          Preencha os campos para gerar a URL.
+        </output>
+
+        <div class="flex flex-wrap gap-3">
+          <button
+            id="btnCopy" type="button" disabled
+            class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+          >Copiar URL</button>
+          <button
+            id="btnOpen" type="button" disabled
+            class="px-4 py-2 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed text-neutral-700 text-sm font-medium transition-colors"
+          >Abrir em nova aba</button>
+        </div>
+
+        <p class="text-xs text-neutral-400">
+          Dica: use <span class="font-mono bg-neutral-100 px-1 rounded">utm_medium=qr</span> para diferenciar acessos por QR Code.
+        </p>
+      </div>
+
+      <!-- Tabela de exemplos -->
+      <div class="rounded-2xl border border-neutral-200 bg-white p-6">
+        <h2 class="font-semibold text-neutral-900 mb-4">Exemplos de uso</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-neutral-200">
+                <th class="text-left py-2 pr-4 font-semibold text-neutral-500">source</th>
+                <th class="text-left py-2 pr-4 font-semibold text-neutral-500">medium</th>
+                <th class="text-left py-2 pr-4 font-semibold text-neutral-500">campaign</th>
+                <th class="text-left py-2 font-semibold text-neutral-500">content</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-100">
+              <tr class="text-neutral-600">
+                <td class="py-2 pr-4 font-mono">instagram</td>
+                <td class="py-2 pr-4 font-mono">stories</td>
+                <td class="py-2 pr-4 font-mono">lancamento-colecao</td>
+                <td class="py-2 font-mono">video-15s</td>
+              </tr>
+              <tr class="text-neutral-600">
+                <td class="py-2 pr-4 font-mono">email</td>
+                <td class="py-2 pr-4 font-mono">newsletter</td>
+                <td class="py-2 pr-4 font-mono">black-friday</td>
+                <td class="py-2 font-mono">cta-topo</td>
+              </tr>
+              <tr class="text-neutral-600">
+                <td class="py-2 pr-4 font-mono">offline</td>
+                <td class="py-2 pr-4 font-mono">qr</td>
+                <td class="py-2 pr-4 font-mono">condominio-harmoni</td>
+                <td class="py-2 font-mono">qr-recepcao</td>
+              </tr>
+              <tr class="text-neutral-600">
+                <td class="py-2 pr-4 font-mono">google</td>
+                <td class="py-2 pr-4 font-mono">cpc</td>
+                <td class="py-2 pr-4 font-mono">remarketing-q4</td>
+                <td class="py-2 font-mono">banner-300x250</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ============================================================
+       Footer
+       ============================================================ -->
+  <footer class="border-t border-neutral-100">
+    <div class="max-w-5xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-neutral-400">
+      <span>Feito por <a href="https://grifo.agency" target="_blank" rel="noopener" class="text-neutral-500 hover:text-brand-600 transition-colors">Grifo Agency</a></span>
+      <a href="../../index.html" class="hover:text-brand-600 transition-colors">Voltar ao hub</a>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div
+    id="toast"
+    role="status"
+    aria-live="polite"
+    style="opacity:0; pointer-events:none;"
+    class="fixed bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg text-sm font-medium border"
+  ></div>
+
+  <!-- Scripts na ordem correta de dependencia -->
+  <script src="./js/config.js"></script>
+  <script src="./js/state.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/main.js"></script>
+
+</body>
+</html>

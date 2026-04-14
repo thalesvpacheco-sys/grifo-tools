@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QR Code — Grifo Tools</title>
+  <meta name="description" content="Gerador de QR Code da Grifo: crie QR codes e baixe em PNG ou SVG. 100% client-side." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png" />
+  <link rel="shortcut icon" href="../../assets/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png" />
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Poppins', 'sans-serif'] },
+          colors: {
+            brand: {
+              50:  '#FAF0EF',
+              100: '#F3D5D2',
+              200: '#E8AAA5',
+              300: '#D47A72',
+              400: '#BA4F46',
+              500: '#9E342B',
+              600: '#802B22',
+              700: '#641F18',
+              800: '#491510',
+              900: '#2E0C09'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20">
+
+  <!-- ============================================================
+       Header
+       ============================================================ -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center gap-3">
+      <a href="../../index.html" aria-label="Voltar ao hub" class="text-neutral-400 hover:text-brand-600 transition-colors">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+      </a>
+      <a href="https://grifo.agency" target="_blank" rel="noopener" aria-label="Visitar site da Grifo">
+        <img
+          id="logoImg"
+          src="../../assets/logo.png"
+          alt="Grifo"
+          class="h-7 w-auto"
+          onerror="this.style.display='none'; document.getElementById('logoFallback').classList.remove('hidden')"
+        />
+        <span id="logoFallback" class="hidden font-semibold text-brand-700 text-lg">Grifo</span>
+      </a>
+      <div class="flex-1"></div>
+      <span class="text-sm font-medium text-neutral-600">QR Code</span>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       Main
+       ============================================================ -->
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Coluna esquerda: configuracoes -->
+      <section class="space-y-6">
+        <div>
+          <h1 class="text-2xl font-bold text-neutral-900 mb-1">QR Code</h1>
+          <p class="text-sm text-neutral-500">Gere e personalize QR Codes para qualquer link ou texto.</p>
+        </div>
+
+        <form id="controls" class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-4" autocomplete="off">
+
+          <!-- URL / Texto -->
+          <div>
+            <label for="data" class="block text-sm font-medium text-neutral-700 mb-1">
+              URL / Texto <span class="text-brand-600">*</span>
+            </label>
+            <input
+              id="data" type="text" required
+              placeholder="https://grifo.agency/"
+              class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+            />
+            <p class="text-xs text-neutral-400 mt-1">Cole um link ou qualquer texto.</p>
+          </div>
+
+          <!-- Tamanho -->
+          <div>
+            <label for="size" class="block text-sm font-medium text-neutral-700 mb-1">Tamanho do arquivo (px)</label>
+            <input
+              id="size" type="number" min="120" max="4096" value="320"
+              class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+            />
+            <p class="text-xs text-neutral-400 mt-1">Dimensao do PNG/SVG baixado. O preview se ajusta ao container.</p>
+          </div>
+
+          <!-- Margem -->
+          <div>
+            <label for="margin" class="block text-sm font-medium text-neutral-700 mb-1">Margem (quiet zone)</label>
+            <input
+              id="margin" type="number" min="0" max="256" value="4"
+              class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+            />
+          </div>
+
+          <!-- Correcao de erro -->
+          <div>
+            <label for="ecl" class="block text-sm font-medium text-neutral-700 mb-1">Correcao de erro</label>
+            <select
+              id="ecl"
+              class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+            >
+              <option value="L">L — 7% (menor, mais dados)</option>
+              <option value="M" selected>M — 15% (recomendado)</option>
+              <option value="Q">Q — 25% (bom para impressao)</option>
+              <option value="H">H — 30% (maxima robustez)</option>
+            </select>
+          </div>
+
+          <!-- Cores -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="colorDark" class="block text-sm font-medium text-neutral-700 mb-1">Cor dos pontos</label>
+              <input
+                id="colorDark" type="color" value="#0b0b0b"
+                class="w-full h-10 rounded-xl bg-white border border-neutral-300 px-2 py-1 cursor-pointer"
+              />
+            </div>
+            <div>
+              <label for="colorLight" class="block text-sm font-medium text-neutral-700 mb-1">Cor de fundo</label>
+              <input
+                id="colorLight" type="color" value="#ffffff"
+                class="w-full h-10 rounded-xl bg-white border border-neutral-300 px-2 py-1 cursor-pointer"
+              />
+            </div>
+          </div>
+
+          <!-- Formato de download -->
+          <div>
+            <label for="format" class="block text-sm font-medium text-neutral-700 mb-1">Formato de download</label>
+            <select
+              id="format"
+              class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+            >
+              <option value="png" selected>PNG (raster)</option>
+              <option value="svg">SVG (vetorial)</option>
+            </select>
+          </div>
+
+          <!-- Estetica dos pontos -->
+          <div>
+            <span class="block text-sm font-medium text-neutral-700 mb-2">Estetica dos pontos</span>
+            <div class="flex gap-6">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="dots" value="square" checked class="accent-brand-600 w-4 h-4" />
+                <span class="text-sm text-neutral-700">Quadrado</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="dots" value="rounded" class="accent-brand-600 w-4 h-4" />
+                <span class="text-sm text-neutral-700">Arredondado</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Botoes -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              id="btnGenerate" type="submit"
+              class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors"
+            >Gerar QR</button>
+            <button
+              id="btnDownload" type="button"
+              class="px-4 py-2.5 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 text-sm font-medium transition-colors"
+            >Baixar</button>
+            <button
+              id="btnShare" type="button"
+              class="px-4 py-2.5 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 text-sm font-medium transition-colors"
+            >Link compartilhavel</button>
+            <span id="status" role="status" aria-live="polite" class="ml-auto text-xs text-neutral-400"></span>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- Coluna direita: preview -->
+      <section class="space-y-4">
+        <div class="rounded-2xl border border-neutral-200 bg-white p-6">
+          <h2 class="font-semibold text-neutral-900 mb-4">Pre-visualizacao</h2>
+          <div class="rounded-xl border border-neutral-200 bg-white p-4 flex items-center justify-center">
+            <div id="preview"></div>
+          </div>
+          <p class="text-xs text-neutral-400 mt-3">
+            Dica: use correcao <span class="font-mono bg-neutral-100 px-1 rounded">Q</span> ou
+            <span class="font-mono bg-neutral-100 px-1 rounded">H</span> para melhor leitura em impressos.
+          </p>
+        </div>
+
+        <!-- Como usar -->
+        <div class="rounded-2xl border border-neutral-200 bg-white p-6">
+          <h2 class="font-semibold text-neutral-900 mb-3">Como usar</h2>
+          <ol class="list-decimal pl-5 space-y-2 text-sm text-neutral-500">
+            <li>Cole a <strong class="text-neutral-700">URL</strong> ou texto desejado.</li>
+            <li>Ajuste tamanho, margem, correcao, cores e estetica.</li>
+            <li>Clique em <strong class="text-neutral-700">Gerar QR</strong> e depois <strong class="text-neutral-700">Baixar</strong>.</li>
+            <li>Use <strong class="text-neutral-700">Link compartilhavel</strong> para salvar as configuracoes na URL.</li>
+          </ol>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ============================================================
+       Footer
+       ============================================================ -->
+  <footer class="border-t border-neutral-100">
+    <div class="max-w-5xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-neutral-400">
+      <span>Feito por <a href="https://grifo.agency" target="_blank" rel="noopener" class="text-neutral-500 hover:text-brand-600 transition-colors">Grifo Agency</a></span>
+      <a href="../../index.html" class="hover:text-brand-600 transition-colors">Voltar ao hub</a>
+    </div>
+  </footer>
+
+  <!-- Mount off-screen para export (nao aparece na UI) -->
+  <div id="exportMount" style="position:fixed; left:-99999px; top:-99999px; width:0; height:0; overflow:hidden;"></div>
+
+  <!-- Scripts na ordem correta de dependencia -->
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/state.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/main.js"></script>
+
+</body>
+</html>
