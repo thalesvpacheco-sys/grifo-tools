@@ -75,16 +75,29 @@
     /* Barra inferior */
     '#footer-bottom {',
     '  border-top: 1px solid #f5f5f5;',
+    '}',
+    'html.dark #footer-bottom { border-color: #1f1f1f; }',
+
+    '#footer-bottom-inner {',
+    '  max-width: 64rem;',
+    '  margin: 0 auto;',
     '  padding: 1rem;',
     '  display: flex;',
-    '  flex-wrap: wrap;',
+    '  flex-direction: column;',
     '  align-items: center;',
-    '  justify-content: space-between;',
-    '  gap: 0.5rem;',
+    '  text-align: center;',
+    '  gap: 0.375rem;',
     '  font-size: 0.6875rem;',
     '  color: #a3a3a3;',
     '}',
-    'html.dark #footer-bottom { border-color: #1f1f1f; color: #737373; }'
+    '@media (min-width: 640px) {',
+    '  #footer-bottom-inner {',
+    '    flex-direction: row;',
+    '    justify-content: space-between;',
+    '    text-align: left;',
+    '  }',
+    '}',
+    'html.dark #footer-bottom-inner { color: #737373; }'
   ].join('\n');
 
   var styleEl = document.createElement('style');
@@ -142,8 +155,10 @@
 
     /* Barra inferior */
     '<div id="footer-bottom">',
-    '  <span>\u00a92026 Grifo Propaganda. Todos os direitos reservados.</span>',
-    '  <span>Nenhum dado \u00e9 enviado a servidores.</span>',
+    '  <div id="footer-bottom-inner">',
+    '    <span>\u00a92026 Grifo Propaganda. Todos os direitos reservados.</span>',
+    '    <span>Nenhum dado \u00e9 enviado a servidores.</span>',
+    '  </div>',
     '</div>'
   ].join('\n');
 

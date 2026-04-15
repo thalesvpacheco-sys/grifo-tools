@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>UTM Builder — Grifo Tools</title>
-  <meta name="description" content="Gere URLs com parametros UTM para rastreamento de campanhas. 100% client-side." />
+  <meta name="description" content="Gere URLs com parâmetros UTM para rastreamento de campanhas. 100% client-side." />
   <meta name="theme-color" content="#ffffff" />
 
   <!-- Anti-flash: aplica o tema ANTES do primeiro render -->
@@ -82,7 +82,7 @@
     <section class="md:col-span-5 space-y-6">
       <div>
         <h1 class="text-2xl font-bold text-neutral-900 mb-1">UTM Builder</h1>
-        <p class="text-sm text-neutral-500">Monte URLs de campanha com parametros UTM.</p>
+        <p class="text-sm text-neutral-500">Adicione parâmetros de rastreamento a qualquer URL de campanha.</p>
       </div>
 
       <form id="utmForm" autocomplete="off" novalidate class="space-y-4">
@@ -95,81 +95,88 @@
           </label>
           <input
             id="baseUrl" type="url" inputmode="url"
-            placeholder="https://exemplo.com/pagina"
+            placeholder="https://exemplo.com.br/pagina"
             class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
           />
+          <p class="text-xs text-neutral-400 mt-1">Cole o link completo da página de destino da campanha.</p>
         </div>
 
         <!-- utm_id -->
         <div>
-          <label for="utm_id" class="block text-sm font-medium text-neutral-700 mb-1">utm_id</label>
+          <label for="utm_id" class="block text-sm font-medium text-neutral-700 mb-1">ID da campanha <span class="text-neutral-400 font-normal">(opcional)</span></label>
           <input
             id="utm_id" type="text" placeholder="ex: sale-24"
             class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
           />
+          <p class="text-xs text-neutral-400 mt-1">Identificador único da campanha para sistemas de rastreamento externos.</p>
         </div>
 
         <!-- utm_source -->
         <div>
           <label for="utm_source" class="block text-sm font-medium text-neutral-700 mb-1">
-            utm_source <span class="text-brand-600">*</span>
+            De onde vem o visitante? <span class="text-brand-600">*</span>
           </label>
           <input
-            id="utm_source" type="text" placeholder="ex: instagram"
+            id="utm_source" type="text" placeholder="ex: instagram, google, email"
             class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
           />
+          <p class="text-xs text-neutral-400 mt-1">A plataforma ou canal de onde o visitante veio (ex: instagram, google, newsletter).</p>
         </div>
 
         <!-- utm_medium -->
         <div>
           <label for="utm_medium" class="block text-sm font-medium text-neutral-700 mb-1">
-            utm_medium <span class="text-brand-600">*</span>
+            Como ele chegou? <span class="text-brand-600">*</span>
           </label>
           <input
-            id="utm_medium" type="text" placeholder="ex: cpc"
+            id="utm_medium" type="text" placeholder="ex: stories, cpc, email"
             class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
           />
+          <p class="text-xs text-neutral-400 mt-1">O formato ou tipo de mídia do anúncio (ex: cpc, stories, newsletter, qr).</p>
         </div>
 
         <!-- utm_campaign -->
         <div>
           <label for="utm_campaign" class="block text-sm font-medium text-neutral-700 mb-1">
-            utm_campaign <span class="text-brand-600">*</span>
+            Nome da campanha <span class="text-brand-600">*</span>
           </label>
           <input
             id="utm_campaign" type="text" placeholder="ex: lancamento-verao"
             class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
           />
+          <p class="text-xs text-neutral-400 mt-1">Nome que identifica esta campanha nos relatórios de análise.</p>
         </div>
 
         <!-- utm_term -->
         <div>
-          <label for="utm_term" class="block text-sm font-medium text-neutral-700 mb-1">utm_term</label>
+          <label for="utm_term" class="block text-sm font-medium text-neutral-700 mb-1">Palavra-chave <span class="text-neutral-400 font-normal">(opcional)</span></label>
           <input
             id="utm_term" type="text" placeholder="ex: tenis-masculino"
             class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
           />
+          <p class="text-xs text-neutral-400 mt-1">Usada em anúncios de busca para identificar o termo que ativou o anúncio.</p>
         </div>
 
         <!-- utm_content -->
         <div>
-          <label for="utm_content" class="block text-sm font-medium text-neutral-700 mb-1">utm_content</label>
+          <label for="utm_content" class="block text-sm font-medium text-neutral-700 mb-1">Variação do anúncio <span class="text-neutral-400 font-normal">(opcional)</span></label>
           <input
-            id="utm_content" type="text" placeholder="ex: cta-topo"
+            id="utm_content" type="text" placeholder="ex: cta-topo, banner-lateral"
             class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
           />
+          <p class="text-xs text-neutral-400 mt-1">Diferencia versões do mesmo anúncio em testes A/B.</p>
         </div>
 
-        <!-- Opcoes -->
+        <!-- Opções -->
         <div class="border border-neutral-200 rounded-xl p-4 space-y-3 bg-neutral-50">
-          <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Opcoes</p>
+          <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Opções</p>
           <label class="flex items-center gap-2 cursor-pointer">
             <input id="optLower" type="checkbox" checked class="accent-brand-600 w-4 h-4" />
-            <span class="text-sm text-neutral-700">Forcar minusculas</span>
+            <span class="text-sm text-neutral-700">Forçar minúsculas</span>
           </label>
           <label class="flex items-center gap-2 cursor-pointer">
             <input id="optKeepExisting" type="checkbox" checked class="accent-brand-600 w-4 h-4" />
-            <span class="text-sm text-neutral-700">Manter parametros existentes na URL base</span>
+            <span class="text-sm text-neutral-700">Manter parâmetros existentes na URL base</span>
           </label>
           <label class="flex items-center gap-2 cursor-pointer">
             <input id="optEncode" type="checkbox" checked class="accent-brand-600 w-4 h-4" />
@@ -181,7 +188,7 @@
         <div class="flex gap-3">
           <button
             id="btnBuild" type="submit"
-            class="flex-1 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors"
+            class="flex-1 px-4 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors"
           >Gerar URL</button>
           <button
             id="btnReset" type="button"
@@ -209,11 +216,11 @@
         <div class="flex flex-wrap gap-3">
           <button
             id="btnCopy" type="button" disabled
-            class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+            class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
           >Copiar URL</button>
           <button
             id="btnOpen" type="button" disabled
-            class="px-4 py-2 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed text-neutral-700 text-sm font-medium transition-colors"
+            class="px-4 py-2.5 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed text-neutral-700 text-sm font-medium transition-colors"
           >Abrir em nova aba</button>
         </div>
 

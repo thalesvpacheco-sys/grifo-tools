@@ -70,7 +70,12 @@
 
     /* Nome da ferramenta */
     '#header-tool-name {',
-    '  font-size: 0.875rem; font-weight: 500; color: #525252;',
+    '  font-size: 0.8125rem; font-weight: 500; color: #525252;',
+    '  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;',
+    '  max-width: 9rem;',
+    '}',
+    '@media (min-width: 640px) {',
+    '  #header-tool-name { font-size: 0.875rem; max-width: none; }',
     '}',
     'html.dark #header-tool-name { color: #a0a0a0; }',
 
@@ -78,7 +83,7 @@
     '#btn-light, #btn-dark {',
     '  background: none; border: none; cursor: pointer; padding: 0;',
     '  display: flex; align-items: center; justify-content: center;',
-    '  width: 2rem; height: 2rem; border-radius: 0.5rem;',
+    '  width: 2.75rem; height: 2.75rem; border-radius: 0.5rem;',
     '  color: #1a1a1a;',
     '  transition: opacity 0.2s ease;',
     '}',
