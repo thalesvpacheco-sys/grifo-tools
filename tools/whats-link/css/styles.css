@@ -1,0 +1,233 @@
+/* ============================================================
+   styles.css — WhatsLink (Grifo Tools)
+   Responsabilidade: Estilos proprios (toolbar, emoji picker,
+     toast, modal) + dark mode
+   ============================================================ */
+
+html { scroll-behavior: smooth; }
+:focus { outline: 2px solid #802B22; outline-offset: 2px; }
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── Toolbar ── */
+.toolbar-btn {
+  height: 2rem;
+  min-width: 2rem;
+  padding: 0 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #525252;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  user-select: none;
+}
+.toolbar-btn:hover { background: #f5f5f5; }
+.toolbar-btn:focus { outline: 2px solid #802B22; outline-offset: 2px; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: #171717;
+  color: #f5f5f5;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 200;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+/* ── Emoji picker ── */
+.emoji-pop {
+  position: absolute;
+  right: 0;
+  top: 2.625rem;
+  z-index: 60;
+  width: 320px;
+  height: 360px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.emoji-header {
+  padding: 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  flex-shrink: 0;
+}
+.emoji-search {
+  width: 100%;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.8125rem;
+  color: #171717;
+  outline: none;
+  font-family: inherit;
+}
+.emoji-search:focus { border-color: #802B22; }
+.emoji-tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.375rem 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  flex-shrink: 0;
+}
+.emoji-tab {
+  flex: 1;
+  padding: 0.3rem 0;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #737373;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+.emoji-tab.active {
+  background: #802B22;
+  border-color: transparent;
+  color: #ffffff;
+}
+.emoji-tab:hover:not(.active) { background: #f3f4f6; color: #404040; }
+.emoji-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.375rem;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  align-content: start;
+}
+.emoji-grid button {
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+.emoji-grid button:hover { background: #f3f4f6; border-color: #e5e7eb; }
+.emoji-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem;
+  border-top: 1px solid #f3f4f6;
+  font-size: 0.75rem;
+  color: #737373;
+  flex-shrink: 0;
+}
+.tone-btn {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  border: 2px solid #e5e7eb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  cursor: pointer;
+  background: transparent;
+  transition: border-color 0.15s ease;
+}
+.tone-btn.active { border-color: #802B22; }
+
+/* ── Dialog (modal) ── */
+dialog {
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  padding: 0;
+  background: #ffffff;
+  color: #171717;
+  max-width: min(600px, 96vw);
+  width: 100%;
+}
+dialog::backdrop { background: rgba(0,0,0,0.45); }
+
+/* ── Dark mode ── */
+html.dark body { background-color: #0f0f0f; color: #f5f5f5; }
+
+html.dark .bg-white { background-color: #1a1a1a; }
+html.dark .bg-neutral-50 { background-color: #141414; }
+html.dark .bg-neutral-100 { background-color: #222222; }
+
+html.dark .border-neutral-200 { border-color: #2a2a2a; }
+html.dark .border-neutral-300 { border-color: #333333; }
+
+html.dark .text-neutral-900 { color: #f5f5f5; }
+html.dark .text-neutral-800 { color: #e5e5e5; }
+html.dark .text-neutral-700 { color: #d4d4d4; }
+html.dark .text-neutral-600 { color: #a3a3a3; }
+html.dark .text-neutral-500 { color: #a0a0a0; }
+html.dark .text-neutral-400 { color: #737373; }
+
+html.dark input:not([type='color']):not([type='checkbox']):not([type='radio']):not([type='range']),
+html.dark select,
+html.dark textarea {
+  background-color: #111111;
+  border-color: #333333;
+  color: #f5f5f5;
+}
+
+/* Resultado URL */
+html.dark #resultUrl { background-color: #0d0d0d; border-color: #2a2a2a; color: #a0a0a0; }
+
+/* Destino dropdown */
+html.dark #destMenu { background-color: #1a1a1a; border-color: #2a2a2a; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+html.dark #destMenu button { color: #d4d4d4; }
+html.dark #destMenu button:hover { background-color: #222222; }
+
+/* CTA card */
+html.dark #ctaCard { background-color: #1a1500; border-color: #3d3000; }
+html.dark #ctaCard > p { background-color: #2a2000; border-color: #4d4000; color: #fde68a; }
+html.dark #ctaCard a { background-color: #1a1a1a; border-color: #2a2a2a; color: #f5f5f5; }
+html.dark #ctaCard a:hover { background-color: #222222; }
+
+/* Toolbar */
+html.dark .toolbar-btn { background: #1a1a1a; border-color: #2a2a2a; color: #a0a0a0; }
+html.dark .toolbar-btn:hover { background: #222222; }
+
+/* Emoji picker */
+html.dark .emoji-pop { background: #1a1a1a; border-color: #2a2a2a; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+html.dark .emoji-header { border-color: #2a2a2a; }
+html.dark .emoji-search { background: #0d0d0d; border-color: #2a2a2a; color: #f5f5f5; }
+html.dark .emoji-tabs { border-color: #2a2a2a; }
+html.dark .emoji-tab { background: #222222; border-color: #2a2a2a; color: #737373; }
+html.dark .emoji-tab.active { background: #802B22; color: #fff; border-color: transparent; }
+html.dark .emoji-tab:hover:not(.active) { background: #2a2a2a; color: #a0a0a0; }
+html.dark .emoji-grid button:hover { background: #2a2a2a; border-color: #333333; }
+html.dark .emoji-footer { border-color: #2a2a2a; color: #737373; }
+html.dark .tone-btn { border-color: #2a2a2a; }
+
+/* Dialog */
+html.dark dialog { background: #1a1a1a; border-color: #2a2a2a; color: #f5f5f5; }
+html.dark dialog .border-neutral-200 { border-color: #2a2a2a; }
+html.dark dialog .border-b { border-color: #2a2a2a; }
+
+/* Templates */
+html.dark #templates > div { background-color: #111111; border-color: #2a2a2a; }

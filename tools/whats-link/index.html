@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatsLink — Grifo Tools</title>
+  <meta name="description" content="Crie links de mensagem automática para WhatsApp com preview, templates e emoji picker. 100% client-side." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Anti-flash: aplica o tema ANTES do primeiro render -->
+  <script>
+    (function () {
+      var stored = localStorage.getItem('grifo_theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png" />
+  <link rel="shortcut icon" href="../../assets/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png" />
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Poppins', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#FAF0EF', 100: '#F3D5D2', 200: '#E8AAA5', 300: '#D47A72',
+              400: '#BA4F46', 500: '#9E342B', 600: '#802B22', 700: '#641F18',
+              800: '#491510', 900: '#2E0C09'
+            },
+            gt: {
+              bg: '#0f0f0f', surface: '#1a1a1a', border: '#2a2a2a',
+              hi:  '#f5f5f5', md: '#a0a0a0'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20 dark:bg-gt-bg dark:text-gt-hi">
+
+  <!-- Header compartilhado -->
+  <header id="site-header" data-tool="WhatsLink" data-root="../../"></header>
+  <script src="../../js/header.js"></script>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- ── Coluna esquerda ────────────────────────────────── -->
+      <div class="space-y-6">
+
+        <!-- Card: dados do link -->
+        <div class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-5">
+          <div>
+            <h1 class="text-xl font-bold text-neutral-900">WhatsLink</h1>
+            <p class="text-sm text-neutral-500 mt-0.5">Crie links de mensagem automática para WhatsApp.</p>
+          </div>
+
+          <!-- Número + Destino -->
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="phone" class="block text-sm font-medium text-neutral-700 mb-1">
+                Número <span class="text-brand-600">*</span>
+              </label>
+              <input
+                id="phone" type="tel" inputmode="numeric"
+                placeholder="+55 (11) 9XXXX-XXXX"
+                autocomplete="tel"
+                class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors"
+              />
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-xs text-neutral-400">DDI + DDD + Número</span>
+                <span id="phoneBadge"></span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-1">Destino</label>
+              <div class="relative">
+                <button
+                  id="destBtn" type="button"
+                  class="w-full px-3 py-2 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm text-left flex items-center justify-between focus:border-brand-500 outline-none transition-colors"
+                >
+                  <span id="destLabel">Automático</span>
+                  <svg class="w-4 h-4 text-neutral-400 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/>
+                  </svg>
+                </button>
+                <div id="destMenu" class="hidden absolute z-20 mt-1 w-full rounded-xl overflow-hidden bg-white border border-neutral-200 shadow-lg">
+                  <button class="w-full text-left px-3 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors" data-mode="auto">Automático</button>
+                  <button class="w-full text-left px-3 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors" data-mode="wa">WhatsApp App</button>
+                  <button class="w-full text-left px-3 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors" data-mode="web">WhatsApp Web</button>
+                </div>
+              </div>
+              <p class="text-xs text-neutral-400 mt-1">Automático detecta mobile ou desktop.</p>
+            </div>
+          </div>
+
+          <!-- Mensagem + Toolbar -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="message" class="block text-sm font-medium text-neutral-700">Mensagem</label>
+              <div id="toolbar" class="relative flex items-center gap-1">
+                <button class="toolbar-btn" type="button" data-wrap="*"  title="Negrito"><b  class="text-xs">B</b></button>
+                <button class="toolbar-btn" type="button" data-wrap="_"  title="Itálico"><i  class="text-xs">I</i></button>
+                <button class="toolbar-btn" type="button" data-wrap="~"  title="Tachado"><s  class="text-xs">S</s></button>
+                <button class="toolbar-btn" type="button" data-wrap="`" title="Mono"><span class="text-xs font-mono">M</span></button>
+                <button id="emojiBtn" class="toolbar-btn" type="button" title="Emojis">&#x1F642;</button>
+
+                <!-- Emoji Picker -->
+                <div id="emojiPop" class="emoji-pop hidden">
+                  <div class="emoji-header">
+                    <input id="emojiSearch" type="search" placeholder="Buscar emoji…" class="emoji-search" autocomplete="off" />
+                  </div>
+                  <div id="emojiTabs" class="emoji-tabs"></div>
+                  <div id="emojiGrid" class="emoji-grid" role="grid" aria-label="Emojis"></div>
+                  <div class="emoji-footer">
+                    <span>Tons:</span>
+                    <button class="tone-btn active" data-tone="0" title="Padrão">&#x1F7E1;</button>
+                    <button class="tone-btn" data-tone="1" title="Claro">&#x1F3FB;</button>
+                    <button class="tone-btn" data-tone="2" title="Médio-claro">&#x1F3FC;</button>
+                    <button class="tone-btn" data-tone="3" title="Médio">&#x1F3FD;</button>
+                    <button class="tone-btn" data-tone="4" title="Médio-escuro">&#x1F3FE;</button>
+                    <button class="tone-btn" data-tone="5" title="Escuro">&#x1F3FF;</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <textarea
+              id="message" rows="10"
+              placeholder="&#x1F525; *OFERTA ESPECIAL*&#10;Aproveite nossa promoção!&#10;&#10;Use o código *PROMO10* e ganhe *10% OFF*"
+              class="w-full px-3 py-3 rounded-xl bg-white border border-neutral-300 text-neutral-900 text-sm focus:border-brand-500 focus:ring-0 outline-none transition-colors resize-none"
+            ></textarea>
+            <div class="flex items-center justify-between mt-1">
+              <span id="charCount" class="text-xs text-neutral-400">0 caracteres</span>
+              <span class="text-xs text-neutral-400">Use Exemplos para textos frequentes.</span>
+            </div>
+          </div>
+
+          <!-- Botões de ação -->
+          <div class="flex flex-wrap gap-2">
+            <button id="btnGenerate" type="button"
+              class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors">
+              Gerar Link
+            </button>
+            <button id="btnOpen" type="button"
+              class="px-4 py-2.5 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 text-sm font-medium transition-colors">
+              Abrir WhatsApp
+            </button>
+            <button id="btnCopy" type="button"
+              class="px-4 py-2.5 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 text-sm font-medium transition-colors">
+              Copiar Link
+            </button>
+            <button id="btnValidate" type="button"
+              class="px-4 py-2.5 rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors">
+              Validar Links
+            </button>
+          </div>
+
+          <!-- URL gerada -->
+          <div>
+            <label class="block text-sm font-medium text-neutral-700 mb-1">URL gerada</label>
+            <input
+              id="resultUrl" type="text" readonly
+              placeholder="Clique em Gerar Link para ver a URL…"
+              class="w-full px-3 py-2 rounded-xl bg-neutral-50 border border-neutral-200 text-neutral-500 text-sm font-mono outline-none"
+            />
+          </div>
+        </div>
+
+        <!-- CTA card (oculto até geração) -->
+        <div id="ctaCard" class="hidden rounded-2xl border border-amber-200 bg-amber-50 p-5 space-y-3">
+          <h3 class="font-semibold text-neutral-800 text-sm">Quer transformar esse link em QR Code?</h3>
+          <p class="text-xs text-amber-800 bg-amber-100 border border-amber-200 rounded-lg px-3 py-2">
+            &#x26A0;&#xFE0F; Copie o link antes de continuar — ele não será salvo
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button id="ctaCopy" type="button"
+              class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors">
+              Copiar link
+            </button>
+            <a href="../../tools/qr-code/index.html"
+              class="px-4 py-2 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 text-sm font-medium transition-colors inline-flex items-center gap-1">
+              Ir para QR Code →
+            </a>
+          </div>
+        </div>
+
+        <!-- Tutorial rápido -->
+        <div class="rounded-2xl border border-neutral-200 bg-white p-6">
+          <h2 class="font-semibold text-neutral-900 mb-4">Tutorial rápido</h2>
+          <ol class="space-y-3">
+            <li class="flex gap-3 text-sm">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center font-semibold">1</span>
+              <span class="text-neutral-600">Digite o número com DDI e DDD. Normalizamos automaticamente.</span>
+            </li>
+            <li class="flex gap-3 text-sm">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center font-semibold">2</span>
+              <span class="text-neutral-600">Escreva a mensagem — o preview estilo WhatsApp atualiza em tempo real.</span>
+            </li>
+            <li class="flex gap-3 text-sm">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center font-semibold">3</span>
+              <span class="text-neutral-600">Clique em <strong class="text-neutral-800">Gerar Link</strong>, depois <strong class="text-neutral-800">Abrir</strong> ou <strong class="text-neutral-800">Copiar</strong>.</span>
+            </li>
+            <li class="flex gap-3 text-sm">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center font-semibold">4</span>
+              <span class="text-neutral-600">Escolha o <strong class="text-neutral-800">Destino</strong>: Automático, App ou Web.</span>
+            </li>
+          </ol>
+        </div>
+
+      </div><!-- fim coluna esquerda -->
+
+      <!-- ── Coluna direita ─────────────────────────────────── -->
+      <div class="space-y-6">
+
+        <!-- Preview da mensagem -->
+        <div class="rounded-2xl border border-neutral-200 bg-white p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-semibold text-neutral-900">Preview da mensagem</h2>
+            <span id="normalizedPhone" class="text-xs text-neutral-400">+55 • aguardando número…</span>
+          </div>
+          <div class="rounded-xl p-4 min-h-[8rem] flex items-start" style="background-color:#DFF5E4">
+            <div class="relative rounded-2xl px-4 py-3 bg-white shadow-sm max-w-xs" style="min-width:8rem">
+              <div id="bubble" class="whitespace-pre-wrap break-words leading-relaxed text-sm pr-10 text-neutral-800"></div>
+              <div id="bubbleTime" class="absolute bottom-1.5 right-3 text-[11px] text-neutral-400"></div>
+            </div>
+          </div>
+          <p class="text-xs text-neutral-400 mt-3">
+            Dica: use <span class="font-mono bg-neutral-100 px-1 rounded">*negrito*</span>,
+            <span class="font-mono bg-neutral-100 px-1 rounded">_itálico_</span>,
+            <span class="font-mono bg-neutral-100 px-1 rounded">~tachado~</span>.
+          </p>
+        </div>
+
+        <!-- Exemplos / Templates -->
+        <div class="rounded-2xl border border-neutral-200 bg-white p-6">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="font-semibold text-neutral-900">Exemplos</h2>
+          </div>
+          <p class="text-xs text-neutral-400 mb-4">Clique em <strong class="text-neutral-600">Usar</strong> para aplicar o exemplo à mensagem.</p>
+          <div id="templates" class="space-y-2"></div>
+        </div>
+
+      </div><!-- fim coluna direita -->
+
+    </div>
+  </main>
+
+  <!-- Modal de validação -->
+  <dialog id="validateModal">
+    <div class="px-5 py-4 border-b border-neutral-200 flex items-center justify-between">
+      <h2 class="font-semibold text-neutral-900">Verificar links</h2>
+      <button id="valClose" type="button"
+        class="w-8 h-8 rounded-full border border-neutral-200 bg-neutral-50 hover:bg-neutral-100 flex items-center justify-center text-neutral-500 text-sm transition-colors"
+        aria-label="Fechar">✕</button>
+    </div>
+    <div class="p-5 space-y-3">
+      <p class="text-sm text-neutral-500">Abra e compare os três modos. Emojis e quebras de linha devem ser idênticos.</p>
+      <div id="valList" class="space-y-3"></div>
+    </div>
+  </dialog>
+
+  <!-- Toast -->
+  <div id="toast" role="status" aria-live="polite" class="toast"></div>
+
+  <!-- Footer compartilhado -->
+  <footer id="site-footer"></footer>
+  <script src="../../js/footer.js"></script>
+
+  <!-- Scripts na ordem correta de dependência -->
+  <script src="./js/config.js"></script>
+  <script src="./js/state.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/main.js"></script>
+
+</body>
+</html>
