@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Grifo Tools</title>
+  <title>Conversor de Imagem — Grifo Tools</title>
   <meta name="description" content="Conversor & Compressor de Imagens — WebP/JPG/PNG + HEIC — 100% client-side." />
 
   <!-- Favicons -->
@@ -13,18 +13,53 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
   <link rel="icon" sizes="192x192" href="../../assets/android-chrome-192x192.png">
   <link rel="icon" sizes="512x512" href="../../assets/android-chrome-512x512.png">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Anti-flash: aplica o tema ANTES do primeiro render -->
+  <script>
+    (function () {
+      var stored = localStorage.getItem('grifo_theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif']
+          },
           colors: {
             brand: {
-              50:'#EFF6FF', 100:'#DBEAFE', 200:'#BFDBFE', 300:'#93C5FD', 400:'#60A5FA',
-              500:'#3B82F6', 600:'#2563EB', 700:'#1D4ED8', 800:'#1E40AF', 900:'#1E3A8A'
+              50:  '#FAF0EF',
+              100: '#F3D5D2',
+              200: '#E8AAA5',
+              300: '#D47A72',
+              400: '#BA4F46',
+              500: '#9E342B',
+              600: '#802B22',
+              700: '#641F18',
+              800: '#491510',
+              900: '#2E0C09'
+            },
+            gt: {
+              bg:      '#0f0f0f',
+              surface: '#1a1a1a',
+              border:  '#2a2a2a',
+              hi:      '#f5f5f5',
+              md:      '#a0a0a0'
             }
           }
         }
@@ -61,18 +96,10 @@
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 
-<body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20">
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200">
-    <div class="max-w-7xl mx-auto px-4 h-14 flex items-center gap-3">
-      <a href="https://grifo.agency" target="_blank" rel="noopener" class="shrink-0" aria-label="Visitar site da Grifo">
-        <img id="logoImg" src="../../assets/logo.png" alt="Grifo" class="h-7 w-auto"
-             onerror="this.style.display='none';document.getElementById('logoFallback').classList.remove('hidden')" />
-        <span id="logoFallback" class="hidden font-semibold text-brand-700">Grifo</span>
-      </a>
-      <div class="flex-1"></div>
-      <h1 class="text-sm md:text-base font-medium text-neutral-700">Conversor (WebP/JPG/PNG) + HEIC</h1>
-    </div>
-  </header>
+<body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20 dark:bg-gt-bg dark:text-gt-hi">
+  <!-- Header compartilhado -->
+  <header id="site-header" data-tool="Conversor de Imagem" data-root="../../"></header>
+  <script src="../../js/header.js"></script>
 
   <main class="max-w-7xl mx-auto px-4 py-6 grid md:grid-cols-12 gap-6">
     <section class="md:col-span-4 space-y-6">
@@ -203,9 +230,9 @@
     </div>
   </div>
 
-  <footer class="max-w-7xl mx-auto px-4 py-10 text-xs text-neutral-500">
-    · Feito por Grifo Agency | Thales Pacheco
-  </footer>
+  <!-- Footer compartilhado -->
+  <footer id="site-footer"></footer>
+  <script src="../../js/footer.js"></script>
 
   <!-- Scripts na ordem correta de dependência -->
   <script src="./js/config.js"></script>

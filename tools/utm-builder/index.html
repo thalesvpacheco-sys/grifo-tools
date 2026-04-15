@@ -7,6 +7,17 @@
   <meta name="description" content="Gere URLs com parametros UTM para rastreamento de campanhas. 100% client-side." />
   <meta name="theme-color" content="#ffffff" />
 
+  <!-- Anti-flash: aplica o tema ANTES do primeiro render -->
+  <script>
+    (function () {
+      var stored = localStorage.getItem('grifo_theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png" />
@@ -49,30 +60,10 @@
 
 <body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20">
 
-  <!-- ============================================================
-       Header
-       ============================================================ -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200">
-    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center gap-3">
-      <a href="../../index.html" aria-label="Voltar ao hub" class="text-neutral-400 hover:text-brand-600 transition-colors">
-        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-        </svg>
-      </a>
-      <a href="https://grifo.agency" target="_blank" rel="noopener" aria-label="Visitar site da Grifo">
-        <img
-          id="logoImg"
-          src="../../assets/logo.png"
-          alt="Grifo"
-          class="h-7 w-auto"
-          onerror="this.style.display='none'; document.getElementById('logoFallback').classList.remove('hidden')"
-        />
-        <span id="logoFallback" class="hidden font-semibold text-brand-700 text-lg">Grifo</span>
-      </a>
-      <div class="flex-1"></div>
-      <span class="text-sm font-medium text-neutral-600">UTM Builder</span>
-    </div>
-  </header>
+
+  <!-- Header compartilhado -->
+  <header id="site-header" data-tool="UTM Builder" data-root="../../"></header>
+  <script src="../../js/header.js"></script>
 
   <!-- ============================================================
        Main
@@ -269,15 +260,10 @@
     </section>
   </main>
 
-  <!-- ============================================================
-       Footer
-       ============================================================ -->
-  <footer class="border-t border-neutral-100">
-    <div class="max-w-5xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-neutral-400">
-      <span>Feito por <a href="https://grifo.agency" target="_blank" rel="noopener" class="text-neutral-500 hover:text-brand-600 transition-colors">Grifo Agency</a></span>
-      <a href="../../index.html" class="hover:text-brand-600 transition-colors">Voltar ao hub</a>
-    </div>
-  </footer>
+
+  <!-- Footer compartilhado -->
+  <footer id="site-footer"></footer>
+  <script src="../../js/footer.js"></script>
 
   <!-- Toast -->
   <div
