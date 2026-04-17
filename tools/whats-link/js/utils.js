@@ -14,13 +14,7 @@ function graphemes(s) {
     : Array.from(s);
 }
 
-function needsFe0f(cp) {
-  return NEEDS_FE0F.has(cp) || (cp >= 0x2194 && cp <= 0x2BFF);
-}
-
 function ensureEmojiStyle(g) {
-  var cp = g.codePointAt(0);
-  if (g.length <= 2 && needsFe0f(cp) && !g.includes(FE0F)) return g + FE0F;
   return g;
 }
 
