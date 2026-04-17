@@ -40,10 +40,8 @@ function fixKeycap(seq) {
 }
 
 function normalizeEmojiString(str) {
-  var nfc = (str || '').normalize('NFC');
-  return graphemes(nfc).map(function(g) {
-    return fixKeycap(applyTone(ensureEmojiStyle(g), 0));
-  }).join('');
+  return (str || '').normalize('NFC')
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
 }
 
 function normalizePhone(input, ddi) {
