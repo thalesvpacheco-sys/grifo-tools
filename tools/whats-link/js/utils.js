@@ -14,10 +14,6 @@ function graphemes(s) {
     : Array.from(s);
 }
 
-function ensureEmojiStyle(g) {
-  return g;
-}
-
 function applyTone(ch, tone) {
   if (!tone) return ch;
   var cp  = ch.codePointAt(0);
@@ -34,7 +30,10 @@ function fixKeycap(seq) {
 }
 
 function normalizeEmojiString(str) {
-  return (str || '').normalize('NFC')
+  return (str || '')
+    .normalize('NFC')
+    .replace(/[\uFE0E\uFE0F]/g, '')
+    .replace(/[\u200B\u200C\u200D]/g, '')
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
 }
 

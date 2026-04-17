@@ -132,7 +132,7 @@ var UI = (function () {
     chars.forEach(function (ch) {
       var btn = document.createElement('button');
       btn.type = 'button';
-      btn.textContent = ensureEmojiStyle(ch);
+      btn.textContent = ch;
       btn.addEventListener('click', function () { insertEmoji(ch); });
       grid.appendChild(btn);
     });
