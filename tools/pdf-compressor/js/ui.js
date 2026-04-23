@@ -24,7 +24,7 @@ var UI = (function () {
 
   // Marca o botão de nível ativo no seletor de compressão.
   function setLevelActive(level) {
-    document.querySelectorAll('.level-btn').forEach(function (btn) {
+    document.querySelectorAll('.level-card').forEach(function (btn) {
       btn.classList.toggle('level-active', btn.dataset.level === level);
     });
   }

@@ -53,19 +53,30 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ── Level selector buttons ── */
-.level-btn {
+/* ── Level cards ── */
+.level-card {
   cursor: pointer;
   user-select: none;
 }
-.level-btn:hover:not(.level-active) {
+.level-card:hover:not(.level-active) {
+  border-color: #D47A72;
   background-color: #FAF0EF;
 }
-.level-btn.level-active {
-  background-color: #802B22;
+.level-card.level-active {
+  border-color: #802B22;
+  background-color: #FAF0EF;
 }
-.level-btn.level-active span {
-  color: rgba(255, 255, 255, 0.9);
+.level-card.level-active .level-card-icon {
+  background-color: #F3D5D2;
+}
+.level-card.level-active .level-card-icon svg {
+  color: #802B22;
+}
+.level-card.level-active .level-card-title {
+  color: #802B22;
+}
+.level-card.level-active .level-card-estimate {
+  color: #9E342B;
 }
 
 /* ── Toast ── */
@@ -127,12 +138,44 @@ html.dark .gs-spinner {
   border-top-color: #D47A72;
 }
 
-html.dark .level-btn:hover:not(.level-active) {
+html.dark .level-card {
+  background-color: #1a1a1a;
+  border-color: #2a2a2a;
+}
+html.dark .level-card:hover:not(.level-active) {
+  border-color: #802B22;
   background-color: #1a0d0b;
 }
-
-html.dark .level-btn.level-active {
-  background-color: #802B22;
+html.dark .level-card.level-active {
+  border-color: #802B22;
+  background-color: #1a0d0b;
+}
+html.dark .level-card .level-card-icon {
+  background-color: #222222;
+}
+html.dark .level-card .level-card-icon svg {
+  color: #737373;
+}
+html.dark .level-card.level-active .level-card-icon {
+  background-color: #2a0f0b;
+}
+html.dark .level-card.level-active .level-card-icon svg {
+  color: #D47A72;
+}
+html.dark .level-card .level-card-title {
+  color: #e5e5e5;
+}
+html.dark .level-card.level-active .level-card-title {
+  color: #D47A72;
+}
+html.dark .level-card .level-card-estimate {
+  color: #525252;
+}
+html.dark .level-card.level-active .level-card-estimate {
+  color: #BA4F46;
+}
+html.dark .level-card-track {
+  background-color: #222222;
 }
 
 html.dark #resultSection .bg-neutral-50 { background-color: #111111; }

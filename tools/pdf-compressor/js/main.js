@@ -81,7 +81,7 @@
   }
 
   // ── Seletor de nível de compressão ───────────────────────
-  document.querySelectorAll('.level-btn').forEach(function (btn) {
+  document.querySelectorAll('.level-card').forEach(function (btn) {
     btn.addEventListener('click', function () {
       AppState.compressionLevel = btn.dataset.level;
       UI.setLevelActive(btn.dataset.level);
