@@ -5,8 +5,9 @@
 // ============================================================
 
 var AppState = {
-  file:            null,          // File object selecionado
-  originalSize:    0,             // bytes do arquivo original
-  compressedBytes: null,          // Uint8Array resultado | null
-  status:          'idle'         // 'idle' | 'loaded' | 'compressing' | 'done'
+  file:             null,
+  originalSize:     0,
+  compressedBytes:  null,
+  status:           'idle',          // 'idle' | 'loaded' | 'compressing' | 'done'
+  compressionLevel: 'equilibrado'    // 'leve' | 'equilibrado' | 'maximo'
 };

@@ -13,16 +13,12 @@
       UI.showToast('Apenas arquivos PDF são aceitos.');
       return;
     }
-    if (file.size > MAX_FILE_SIZE_BYTES) {
-      UI.showToast('Arquivo muito grande. Máximo: 100 MB.');
-      return;
-    }
 
     AppState.file            = file;
     AppState.originalSize    = file.size;
     AppState.compressedBytes = null;
     AppState.status          = 'loaded';
-    UI.showLoaded(file);
+    UI.showLoaded(file, AppState.compressionLevel);
   }
 
   function runCompression() {
@@ -36,40 +32,25 @@
     reader.onload = function (e) {
       var arrayBuffer = e.target.result;
 
-      // Progresso simulado: avança até 90% enquanto a Promise processa.
-      var progress = 0;
-      var interval = setInterval(function () {
-        progress += Math.random() * 12 + 3;
-        if (progress > 90) progress = 90;
-        UI.setProgress(progress);
-      }, 150);
-
-      compressPdf(arrayBuffer)
-        .then(function (bytes) {
-          clearInterval(interval);
-          UI.setProgress(100);
-          setTimeout(function () {
-            AppState.compressedBytes = bytes;
+      // setTimeout dá ao browser um frame para renderizar o spinner antes do WASM bloquear.
+      setTimeout(function () {
+        compressPdf(arrayBuffer, AppState.compressionLevel)
+          .then(function (output) {
+            AppState.compressedBytes = output;
             AppState.status          = 'done';
-            UI.showResult(AppState.originalSize, bytes.byteLength);
-          }, 300);
-        })
-        .catch(function (err) {
-          clearInterval(interval);
-          AppState.status = 'loaded';
-          UI.el('progressSection').classList.add('hidden');
-          UI.el('btnCompress').style.display = '';
-          UI.el('actionsSection').classList.add('show');
-          var msg = err && err.message ? err.message : 'formato não suportado';
-          UI.showToast('Erro ao comprimir: ' + msg);
-        });
+            UI.showResult(AppState.originalSize, output.byteLength);
+          })
+          .catch(function (err) {
+            AppState.status = 'loaded';
+            UI.showCompressionError(AppState.compressionLevel);
+            UI.showToast('Erro ao comprimir: ' + (err && err.message ? err.message : 'falha desconhecida'));
+          });
+      }, 50);
     };
 
     reader.onerror = function () {
       AppState.status = 'loaded';
-      UI.el('progressSection').classList.add('hidden');
-      UI.el('btnCompress').style.display = '';
-      UI.el('actionsSection').classList.add('show');
+      UI.showCompressionError(AppState.compressionLevel);
       UI.showToast('Erro ao ler o arquivo.');
     };
 
@@ -91,12 +72,21 @@
   }
 
   function runReset() {
-    AppState.file            = null;
-    AppState.originalSize    = 0;
-    AppState.compressedBytes = null;
-    AppState.status          = 'idle';
+    AppState.file             = null;
+    AppState.originalSize     = 0;
+    AppState.compressedBytes  = null;
+    AppState.status           = 'idle';
+    AppState.compressionLevel = 'equilibrado';
     UI.reset();
   }
+
+  // ── Seletor de nível de compressão ───────────────────────
+  document.querySelectorAll('.level-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      AppState.compressionLevel = btn.dataset.level;
+      UI.setLevelActive(btn.dataset.level);
+    });
+  });
 
   // ── Dropzone ──────────────────────────────────────────────
   var dropzone  = document.getElementById('dropzone');

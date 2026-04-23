@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PDF Compressor — Grifo Tools</title>
-  <meta name="description" content="Comprime PDFs sem perda de qualidade visual. 100% client-side, nenhum arquivo enviado a servidores." />
+  <meta name="description" content="Comprime PDFs com Ghostscript real. 100% client-side, nenhum arquivo enviado a servidores." />
   <meta name="theme-color" content="#ffffff" />
 
   <!-- Anti-flash: aplica o tema ANTES do primeiro render -->
@@ -54,6 +54,12 @@
   </script>
 
   <link rel="stylesheet" href="./css/styles.css" />
+
+  <!-- Ghostscript WASM — carregado como ES module para acessar import.meta.url -->
+  <script type="module">
+    import initGhostscript from 'https://cdn.jsdelivr.net/npm/@jspawn/ghostscript-wasm@0.0.2/gs.mjs';
+    window._initGhostscript = initGhostscript;
+  </script>
 </head>
 
 <body class="min-h-screen bg-white text-neutral-900 selection:bg-brand-500/20 dark:bg-gt-bg dark:text-gt-hi">
@@ -68,7 +74,7 @@
     <div class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-5">
       <div>
         <h1 class="text-xl font-bold text-neutral-900">PDF Compressor</h1>
-        <p class="text-sm text-neutral-500 mt-0.5">Reduza o tamanho de PDFs sem perder qualidade visual. Tudo no navegador.</p>
+        <p class="text-sm text-neutral-500 mt-0.5">Compressão real com Ghostscript — 50–80% de redução. Tudo no navegador, sem enviar arquivos.</p>
       </div>
 
       <!-- Drop zone -->
@@ -85,7 +91,7 @@
           <p class="font-medium text-neutral-700">Arraste um PDF aqui</p>
           <p class="text-sm text-neutral-400 mt-0.5">ou clique para selecionar</p>
         </div>
-        <p class="text-xs text-neutral-400">Máximo 100 MB · apenas PDF</p>
+        <p class="text-xs text-neutral-400">Apenas PDF · sem limite de tamanho</p>
         <input id="fileInput" type="file" accept=".pdf,application/pdf" class="hidden" />
       </div>
 
@@ -106,14 +112,36 @@
         </button>
       </div>
 
-      <!-- Barra de progresso -->
-      <div id="progressSection" class="hidden space-y-2">
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-neutral-600 font-medium">Comprimindo…</span>
-          <span id="progressLabel" class="text-neutral-500 font-medium">0%</span>
+      <!-- Seletor de nível de compressão -->
+      <div id="levelSection" class="hidden space-y-2">
+        <p class="text-sm font-medium text-neutral-700">Nível de compressão</p>
+        <div class="flex rounded-xl border border-neutral-200 overflow-hidden text-center">
+          <button data-level="leve" type="button"
+            class="level-btn flex-1 py-3 text-sm border-r border-neutral-200 transition-colors">
+            <span class="font-semibold block text-neutral-700">Leve</span>
+            <span class="text-xs text-neutral-400 block mt-0.5">Mínima perda</span>
+          </button>
+          <button data-level="equilibrado" type="button"
+            class="level-btn flex-1 py-3 text-sm border-r border-neutral-200 transition-colors">
+            <span class="font-semibold block text-neutral-700">Equilibrado</span>
+            <span class="text-xs text-neutral-400 block mt-0.5">Recomendado</span>
+          </button>
+          <button data-level="maximo" type="button"
+            class="level-btn flex-1 py-3 text-sm transition-colors">
+            <span class="font-semibold block text-neutral-700">Máximo</span>
+            <span class="text-xs text-neutral-400 block mt-0.5">Maior redução</span>
+          </button>
         </div>
-        <div class="h-2 rounded-full bg-neutral-100 overflow-hidden">
-          <div id="progressBar" class="progress-bar h-full rounded-full bg-brand-600" style="width:0%"></div>
+      </div>
+
+      <!-- Spinner de progresso (CSS-animated — funciona mesmo com WASM bloqueando a thread) -->
+      <div id="progressSection" class="hidden">
+        <div class="flex flex-col items-center gap-3 py-4">
+          <div class="gs-spinner"></div>
+          <div class="text-center">
+            <p class="text-sm font-medium text-neutral-700">Comprimindo com Ghostscript…</p>
+            <p class="text-xs text-neutral-400 mt-1">Arquivos grandes podem levar alguns minutos</p>
+          </div>
         </div>
       </div>
 
@@ -136,7 +164,7 @@
       </div>
 
       <!-- Botões de ação -->
-      <div id="actionsSection" class="actions-row hidden">
+      <div id="actionsSection" class="actions-row">
         <button id="btnCompress" type="button"
           class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors">
           Comprimir PDF
@@ -158,19 +186,19 @@
       <ol class="space-y-3">
         <li class="flex gap-3 text-sm">
           <span class="shrink-0 w-6 h-6 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center font-semibold">1</span>
-          <span class="text-neutral-600">Arraste ou selecione o PDF que deseja comprimir.</span>
+          <span class="text-neutral-600">Arraste ou selecione o PDF — sem limite de tamanho.</span>
         </li>
         <li class="flex gap-3 text-sm">
           <span class="shrink-0 w-6 h-6 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center font-semibold">2</span>
-          <span class="text-neutral-600">Clique em <strong class="text-neutral-800">Comprimir PDF</strong>. O processamento ocorre inteiramente no seu navegador.</span>
+          <span class="text-neutral-600">Escolha o nível: <strong class="text-neutral-800">Leve</strong> preserva qualidade máxima, <strong class="text-neutral-800">Equilibrado</strong> oferece ótima redução (recomendado), <strong class="text-neutral-800">Máximo</strong> comprime ao limite.</span>
         </li>
         <li class="flex gap-3 text-sm">
           <span class="shrink-0 w-6 h-6 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center font-semibold">3</span>
-          <span class="text-neutral-600">Veja o tamanho antes e depois, e baixe o arquivo comprimido.</span>
+          <span class="text-neutral-600">Clique em <strong class="text-neutral-800">Comprimir PDF</strong>. O motor Ghostscript roda no seu navegador — arquivos grandes podem levar alguns minutos.</span>
         </li>
         <li class="flex gap-3 text-sm">
           <span class="shrink-0 w-6 h-6 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center font-semibold">4</span>
-          <span class="text-neutral-600">Nenhum dado é enviado a servidores. Tudo fica no seu dispositivo.</span>
+          <span class="text-neutral-600">Veja a redução real obtida e baixe o arquivo. Nenhum dado é enviado a servidores.</span>
         </li>
       </ol>
     </div>
@@ -183,9 +211,6 @@
   <!-- Footer compartilhado -->
   <footer id="site-footer"></footer>
   <script src="../../js/footer.js"></script>
-
-  <!-- pdf-lib via CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
   <!-- Scripts na ordem correta de dependência -->
   <script src="./js/config.js"></script>

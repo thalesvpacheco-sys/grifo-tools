@@ -1,7 +1,7 @@
 // ============================================================
 // utils.js — PDF Compressor (Grifo Tools)
 // Responsabilidade: Logica pura — compressao e formatacao
-// Dependencias: pdf-lib (global PDFLib), config.js
+// Dependencias: config.js, window._initGhostscript (WASM)
 // ============================================================
 
 function formatFileSize(bytes) {
@@ -11,13 +11,40 @@ function formatFileSize(bytes) {
   return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
 }
 
-// Carrega e reserializa o PDF com object streams comprimidos.
+// Comprime o PDF usando Ghostscript WASM.
 // Retorna Promise<Uint8Array>.
-function compressPdf(arrayBuffer) {
-  return PDFLib.PDFDocument.load(arrayBuffer).then(function (pdfDoc) {
-    return pdfDoc.save({
-      useObjectStreams:  true,
-      objectsPerTick:   COMPRESS_OBJECTS_PER_TICK
-    });
+function compressPdf(arrayBuffer, level) {
+  return new Promise(function (resolve, reject) {
+    var initGs = window._initGhostscript;
+    if (typeof initGs !== 'function') {
+      reject(new Error('Ghostscript WASM não carregado. Recarregue a página.'));
+      return;
+    }
+
+    var levelConfig = COMPRESSION_LEVELS[level] || COMPRESSION_LEVELS.equilibrado;
+
+    initGs().then(function (gs) {
+      try {
+        gs.FS.writeFile('input.pdf', new Uint8Array(arrayBuffer));
+
+        var args = [
+          '-sDEVICE=pdfwrite',
+          '-dCompatibilityLevel=1.4'
+        ].concat(levelConfig.args).concat([
+          '-dNOPAUSE',
+          '-dQUIET',
+          '-dBATCH',
+          '-sOutputFile=output.pdf',
+          'input.pdf'
+        ]);
+
+        gs.callMain(args);
+
+        var output = gs.FS.readFile('output.pdf');
+        resolve(output);
+      } catch (err) {
+        reject(err);
+      }
+    }).catch(reject);
   });
 }
